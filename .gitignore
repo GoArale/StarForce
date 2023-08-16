@@ -22,3 +22,7 @@
 /ProjectSettings/ProjectVersion.txt
 /Packages/*
 /UnityPackageManager/*
+/Logs/*
+/.idea/*
+/UserSettings/*
+/Assets/.idea/*
