@@ -47,20 +47,27 @@ namespace GameMain.RpcNetwork
                     var success = false;
                     foreach (PacketRegisterAttribute packetAttr in type.GetCustomAttributes(typeof(PacketRegisterAttribute), false))
                     {
-                        FieldInfo packetIdFiled = type.GetField("PacketId", BindingFlags.Static | BindingFlags.Public);
-                        if (packetIdFiled == null)
+                        // 从当前类往上查找 PacketId 字段, 并赋值
+                        Type baseType = type;
+                        while (true)
                         {
-                            if (type.BaseType == null)
+                            FieldInfo packetIdFiled = type.GetField("PacketId", BindingFlags.Public);
+                            if (packetIdFiled == null)
                             {
-                                throw new Exception($"{type} PacketId field does not exist");
+                                baseType = baseType.BaseType;
+                                if (baseType == null)
+                                {
+                                    throw new Exception($"{type} PacketId field does not exist");
+                                }
                             }
-                        }
-                        else
-                        {
-                            // packetIdFiled.SetValue(null, packetAttr.PacketId);
-                            RegisterProtocol(packetAttr.PacketId, Activator.CreateInstance(type) as PacketBase);
+                            else
+                            {
+                                packetIdFiled.SetValue(null, packetAttr.PacketId);
+                                RegisterProtocol(packetAttr.PacketId, Activator.CreateInstance(type) as PacketBase);
 
-                            success = true;
+                                success = true;
+                                break;
+                            }
                         }
                     }
 
@@ -72,8 +79,25 @@ namespace GameMain.RpcNetwork
 
                     foreach (RpcTimeoutAttribute attr in type.GetCustomAttributes(typeof(RpcTimeoutAttribute), false))
                     {
-                        FieldInfo timeoutField = type.GetField("TimeoutMs", BindingFlags.Static | BindingFlags.Public);
-                        timeoutField?.SetValue(null, attr.TimeoutMS);
+                        // 从当前类往上查找 TimeoutMS, 并赋值
+                        Type baseType = type;
+                        while (true)
+                        {
+                            FieldInfo timeoutField = type.GetField("TimeoutMS", BindingFlags.Public);
+                            if (timeoutField == null)
+                            {
+                                baseType = baseType.BaseType;
+                                if (baseType == null)
+                                {
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                timeoutField.SetValue(null, attr.TimeoutMS);
+                                break;
+                            }
+                        }
                     }
                 }
             }

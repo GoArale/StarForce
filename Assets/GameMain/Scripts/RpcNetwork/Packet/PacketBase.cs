@@ -38,5 +38,14 @@ namespace GameMain.RpcNetwork
             
             
         }
+        
+        private void OnResponseTimeout()
+        {
+            if (State == RpcState.Wait)
+            {
+                
+            }
+        }
+        
     }
 }
