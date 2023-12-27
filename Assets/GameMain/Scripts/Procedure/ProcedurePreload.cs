@@ -9,6 +9,7 @@ using GameFramework;
 using GameFramework.Event;
 using GameFramework.Resource;
 using System.Collections.Generic;
+using GameMain.Rpc;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 using ProcedureOwner = GameFramework.Fsm.IFsm<GameFramework.Procedure.IProcedureManager>;
@@ -102,6 +103,14 @@ namespace GameMain
 
             // Preload fonts
             LoadFont("MainFont");
+
+            // Preload protocol
+            LoadProtocol();
+        }
+
+        private void LoadProtocol()
+        {
+            PacketDispatcher.Instance.Init();
         }
 
         private void LoadConfig(string configName)

@@ -82,7 +82,7 @@ namespace GameFramework
                 while (task != null)
                 {
                     nextTask = task.Next();
-                    if (task.Cancelled == false)
+                    if (task.m_Cancelled == false)
                     {
                         task.Run(m_TimerManager);
                     }
@@ -95,7 +95,7 @@ namespace GameFramework
                 while (task != null)
                 {
                     nextTask = task.Next();
-                    if (task.Cancelled == false)
+                    if (task.m_Cancelled == false)
                     {
                         m_TimerManager.AddTaskToWheel(task);
                     }

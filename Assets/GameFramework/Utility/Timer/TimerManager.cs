@@ -8,50 +8,42 @@ namespace GameFramework
         public static TimerManager Instance { get; } = new();
 
         private long m_CurTime;
-        private TimingWheel m_FirstLevelWheel; // 第一级时间轮
-        private int[] m_WheelSize = { 1 << 12, 1 << 10, 1 << 10 }; // 每一级时间轮的时间格个数
+        private readonly TimingWheel m_FirstLevelWheel; // 第一级时间轮
+        private readonly int[] m_WheelSize = { 1 << 12, 1 << 10, 1 << 10 }; // 每一级时间轮的时间格个数
         
         private List<TimerTask> m_RunListWriter = new(); // 立即执行的定时器(writer)
         private List<TimerTask> m_RunListReader = new(); // 立即执行的定时器(reader)
 
-        private ITImerSource m_TimeSrc; // 时间源
+        private ITimeSource m_TimeSrc; // 时间源
         
-        private class RealTimeSource : ITimeSource
+        private TimerManager(ITimeSource src = null, int [] wheelSize = null)
         {
-            public long GetTime()
+            m_TimeSrc = src ?? new MachineTimeSource();
+            m_CurTime = m_TimeSrc.GetTime();
+        
+            if (wheelSize != null)
             {
-                return UtilTime.GetNowMilliSecond();
+                m_WheelSize = wheelSize;
             }
-            public long Wait(long time)
-            {
-                System.Threading.Thread.Sleep((int)time);
-                return UtilTime.GetNowMilliSecond();
-            }
+            m_FirstLevelWheel = GenerateWheel(0, 1);
         }
         
-        public TimerManager(ITimeSource src = null, int [] wheelSlotNum = null)
+        /// <summary>
+        /// 以 intervalMs 间隔执行任务
+        /// </summary>
+        /// <param name="intervalMs"></param>
+        /// <param name="d"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public TimerTask AddTimer(long intervalMs, Action d, int count = 1)
         {
-            m_timeSrc = src ?? new RealTimeSource();
-            m_currTime = m_timeSrc.GetTime();
-        
-            if (wheelSlotNum != null)
+            if (intervalMs <= 0)
             {
-                m_wheelSlotNum = wheelSlotNum;
-            }
-            m_firstLevelWheel = GenerateWheel(0, 1);
-        }
-        
-        
-        
-        public TimerTask AddTimer(long interval, Action d, int count = 1)
-        {
-            if (interval <= 0)
-            {
-                interval = 1;
+                intervalMs = 1;
             }
         
-            var expiretime = m_timeSrc.GetTime() + interval;
-            var task = new TimerTask(expiretime, interval, count, d);
+            var trigger = m_TimeSrc.GetTime() + intervalMs;
+            var task = new TimerTask(trigger, intervalMs, count, d);
             AddTask(task);
             return task;
         }
@@ -61,62 +53,68 @@ namespace GameFramework
             return AddTimer((long)sp.TotalMilliseconds, d, count);
         }
         
-        public TimerTask AddTimer(long delayMs, long interval, Action d, int count = 1)
+        /// <summary>
+        /// delayMs 时间后, 以 intervalMs 间隔执行任务
+        /// </summary>
+        /// <param name="delayMs"></param>
+        /// <param name="intervalMs"></param>
+        /// <param name="d"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public TimerTask AddDelayTimer(long delayMs, long intervalMs, Action d, int count = 1)
         {
-            if (interval <= 0)
+            if (intervalMs <= 0)
             {
-                interval = 1;
+                intervalMs = 1;
             }
-            if (delayMs <= 0)
+            if (delayMs < 0)
             {
-                delayMs = 1;
+                delayMs = 0;
             }
-            var expiretime = m_timeSrc.GetTime() + delayMs;
-            var task = new TimerTask(expiretime, interval, count, d);
+            var trigger = m_TimeSrc.GetTime() + delayMs;
+            var task = new TimerTask(trigger, intervalMs, count, d);
             AddTask(task);
             return task;
         }
         
-        public TimerTask AddTimer(TimeSpan delay, TimeSpan interval, Action d, int count = 1)
+        public TimerTask AddDelayTimer(TimeSpan delay, TimeSpan interval, Action d, int count = 1)
         {
-            return AddTimer((long)delay.TotalMilliseconds, (long)interval.TotalMilliseconds, d, count);
+            return AddDelayTimer((long)delay.TotalMilliseconds, (long)interval.TotalMilliseconds, d, count);
         }
         
         internal void AddTask(TimerTask task)
         {
-            // 只要机器物理时间不回退，这里走不到(delayms > 0, 当前时间递增)
-            // 加上这一句， 防止由于时间回退引起定时器错乱
-            if (task.m_expiration <= m_currTime)
+            if (task.m_Trigger <= m_CurTime)
             {
-                m_runListWriter.Add(task);
+                // 只要机器物理时间不回退，这里不会执行；
+                // 这里主要处理由于时间回退引起的定时器错乱问题
+                m_RunListWriter.Add(task);
             }
             else
             {
-                m_firstLevelWheel.AddTask(task.m_expiration - m_currTime, task);
+                m_FirstLevelWheel.AddTask(task.m_Trigger - m_CurTime, task);
             }
         }
         
         internal void AddTaskToWheel(TimerTask task)
         {
-            m_firstLevelWheel.AddTask(task.m_expiration - m_currTime, task);
+            m_FirstLevelWheel.AddTask(task.m_Trigger - m_CurTime, task);
         }
         
         private void CheckRunList()
         {
-            if (m_runListWriter.Count > 0)
+            if (m_RunListWriter.Count > 0)
             {
-                var temp = m_runListReader;
-                m_runListReader = m_runListWriter;
-                m_runListWriter = temp;
-        
-                foreach (var task in m_runListReader)
+                (m_RunListReader, m_RunListWriter) = (m_RunListWriter, m_RunListReader);
+
+                foreach (TimerTask task in m_RunListReader)
                 {
-                    if (task.m_canceled == false)
+                    if (task.m_Cancelled == false)
                     {
                         task.Run(this);
                     }
                 }
-                m_runListReader.Clear();
+                m_RunListReader.Clear();
             }
         }
         

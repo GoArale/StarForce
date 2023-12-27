@@ -26,10 +26,16 @@ namespace GameMain
             private set;
         }
 
+        /// <summary>
+        /// 游戏全局配置
+        /// </summary>
+        public static GameGlobalComponent GameGlobal { get; private set; }
+
         private static void InitCustomComponents()
         {
             BuiltinData = UnityGameFramework.Runtime.GameEntry.GetComponent<BuiltinDataComponent>();
             HPBar = UnityGameFramework.Runtime.GameEntry.GetComponent<HPBarComponent>();
+            GameGlobal = UnityGameFramework.Runtime.GameEntry.GetComponent<GameGlobalComponent>();
         }
     }
 }

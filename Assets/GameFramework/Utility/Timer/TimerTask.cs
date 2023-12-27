@@ -5,7 +5,7 @@ namespace GameFramework
 {
     public class TimerTask
     {
-        private long m_TriggerMs; // 任务触发时间
+        internal long m_Trigger; // 任务触发时间
         private readonly long m_IntervalMs; // 定时执行间隔
         private readonly int m_Count; // 计划触发次数
         private int m_Counter; // 完成触发次数
@@ -14,13 +14,13 @@ namespace GameFramework
         private TimerTask m_PrevTask;
         private TimerTask m_NextTask;
 
-        internal bool Cancelled; // 任务是否取消
+        internal bool m_Cancelled; // 任务是否取消
         private int m_Index; // 命中时间轮索引
         private uint m_Level; // 命中时间轮层级
         
-        public TimerTask(long triggerMs, long intervalMs, int count, Action d)
+        public TimerTask(long trigger, long intervalMs, int count, Action d)
         {
-            m_TriggerMs = triggerMs;
+            m_Trigger = trigger;
             m_IntervalMs = intervalMs;
             m_Count = count;
             m_Delegate = d;
@@ -56,7 +56,7 @@ namespace GameFramework
         
         public void Cancel()
         {
-            Cancelled = true;
+            m_Cancelled = true;
             m_Delegate = null;
         }
         
@@ -68,7 +68,7 @@ namespace GameFramework
             {
                 // m_TriggerMs += m_IntervalMs
                 // 以任务实行完成后的时间点 + 定时时间 更合理一些
-                m_TriggerMs = timer.GetTimeSource().GetTime() + m_IntervalMs;
+                m_Trigger = timer.GetTimeSource().GetTime() + m_IntervalMs;
                 timer.AddTask(this);
             }
         }
