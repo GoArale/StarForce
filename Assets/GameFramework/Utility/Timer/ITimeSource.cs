@@ -5,11 +5,11 @@
         long GetTime();
     }
     
-    public class MachineTimeSource : ITimeSource
+    public class UtcTimeSource : ITimeSource
     {
         public long GetTime()
         {
-            return Utility.MachineTime.GetNowMilliSecond();
+            return Utility.UtcTime.GetNowMilliSecond();
         }
     }
 

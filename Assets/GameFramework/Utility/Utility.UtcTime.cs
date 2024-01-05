@@ -4,8 +4,10 @@ namespace GameFramework
 {
     public static partial class Utility
     {
-        public static class MachineTime
+        public static class UtcTime
         {
+            private static readonly DateTime Utc1970 = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            
             /// <summary>
             /// 机器当前时间戳(单位:s)
             /// </summary>
@@ -24,7 +26,6 @@ namespace GameFramework
                 return (DateTime.UtcNow.Ticks - 621355968000000000) / 10000;
             }
 
-            private static readonly DateTime StartTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).ToLocalTime();
 
             /// <summary>
             /// 时间转换为时间戳(单位:s)
@@ -43,7 +44,7 @@ namespace GameFramework
             /// <returns></returns>
             public static DateTime TimestampSecToDateTime(long ts)
             {
-                return StartTime.AddSeconds(ts);
+                return Utc1970.AddSeconds(ts);
             }
 
             /// <summary>
@@ -63,7 +64,7 @@ namespace GameFramework
             /// <returns></returns>
             public static DateTime TimestampMsToDateTime(long ts)
             {
-                return StartTime.AddMilliseconds(ts);
+                return Utc1970.AddMilliseconds(ts);
             }
         }
     }

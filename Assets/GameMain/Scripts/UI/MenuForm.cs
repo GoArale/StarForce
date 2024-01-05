@@ -5,6 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using GameMain.Rpc;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -24,12 +25,17 @@ namespace GameMain
 
         public void OnSettingButtonClick()
         {
-            GameEntry.UI.OpenUIForm(UIFormId.SettingForm);
+            // GameEntry.UI.OpenUIForm(UIFormId.SettingForm);
+            var msg = Rpc_Client2Balance_LoginTest.New();
+            msg.m_Req.Platform = KP2Protocol.Platform.Android;
+            LoginNet.Instance.SendPacket(msg);
         }
 
         public void OnAboutButtonClick()
         {
-            GameEntry.UI.OpenUIForm(UIFormId.AboutForm);
+            // GameEntry.UI.OpenUIForm(UIFormId.AboutForm);
+            LoginNet.Instance.CloseConnection();
+            LoginNet.Instance.Connect("10.2.196.117", 9000);
         }
 
         public void OnQuitButtonClick()

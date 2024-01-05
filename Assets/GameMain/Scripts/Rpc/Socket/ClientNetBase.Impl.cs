@@ -116,7 +116,7 @@ namespace GameMain.Rpc
 
         private bool IsConnected()
         {
-            return m_Session.Conn != null && m_Session.Conn.ConnState == ConnectionState.Connected;
+            return m_Session.TcpConn != null && m_Session.TcpConn.ConnState == ConnectionState.Connected;
         }
 
         private bool DoSendPacket(PacketBase packet, bool cache = true)
@@ -155,13 +155,13 @@ namespace GameMain.Rpc
                 m_SendBuffer.Push(packet.SequenceId, bytes, (int)pktLen);
                 if (IsConnected())
                 {
-                    return m_Session.Conn.Send(bytes, 0, (int)pktLen);
+                    return m_Session.TcpConn.Send(bytes, 0, (int)pktLen);
                 }
 
                 return false;
             }
 
-            return m_Session.Conn.Send(bytes, 0, (int)pktLen);
+            return m_Session.TcpConn.Send(bytes, 0, (int)pktLen);
         }
 
         private uint NextSequenceId()

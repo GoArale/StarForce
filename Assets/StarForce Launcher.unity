@@ -832,6 +832,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EnableRpcTimeout: 1
+  m_ReconnectNum: 3
 --- !u!1 &1454214586
 GameObject:
   m_ObjectHideFlags: 0

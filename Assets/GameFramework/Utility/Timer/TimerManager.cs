@@ -18,7 +18,7 @@ namespace GameFramework
         
         private TimerManager(ITimeSource src = null, int [] wheelSize = null)
         {
-            m_TimeSrc = src ?? new MachineTimeSource();
+            m_TimeSrc = src ?? new UtcTimeSource();
             m_CurTime = m_TimeSrc.GetTime();
         
             if (wheelSize != null)

@@ -7,44 +7,45 @@ namespace GameMain.Rpc
     public sealed class Session
     {
         public IPEndPoint EndPoint { get; set; }
-        public TcpConnection Conn { get; private set; }
+        public TcpConnection TcpConn { get; private set; }
         public NetState State { get; set; }
         public int Timeout { get; set; }
         public int ReconnectNum { get; set; }
         public int ConnectedNum { get; set; }
-        public INetEventHandler NetEventHandler { get; set; }
         public ITcpHandler TcpHandler { get; set; }
-        public TimerTask Timer { get; set; }
+
+        private readonly INetEventHandler m_NetEventHandler;
+        private TimerTask m_Timer;
 
         public Session(INetEventHandler netEventHandler)
         {
-            NetEventHandler = netEventHandler;
+            m_NetEventHandler = netEventHandler;
         }
 
         private void StartTimer()
         {
             StopTimer();
-            Timer = TimerManager.Instance.AddTimer(Timeout, OnConnectTimeout, -1);
+            m_Timer = TimerManager.Instance.AddTimer(Timeout, OnConnectTimeout, -1);
         }
 
         private void StopTimer()
         {
-            Timer?.Cancel();
-            Timer = null;
+            m_Timer?.Cancel();
+            m_Timer = null;
         }
 
         private void OnConnectTimeout()
         {
             if (State != NetState.Connected)
             {
-                Log.Error($"session connect timeout. ep:{EndPoint} reconnectNum:{ReconnectNum}");
+                Log.Error($"Session connect timeout. ep:{EndPoint}");
                 State = NetState.DisConnect;
-                NetEventHandler.OnConnectFailed(ReconnectNum);
+                m_NetEventHandler.OnConnectFailed(ReconnectNum);
 
                 if (State != NetState.ForceClose)
                 {
-                    Connect();
                     ReconnectNum++;
+                    Connect();
                 }
             }
         }
@@ -57,12 +58,12 @@ namespace GameMain.Rpc
             // todo ui ShowNetWaiting
 
             // 建立新连接
-            Conn = new TcpConnection();
-            Conn.Init(TcpHandler, 1 * 1024 * 1024);
+            TcpConn = new TcpConnection();
+            TcpConn.Init(TcpHandler, 1 * 1024 * 1024);
             State = NetState.Connecting;
-            Conn.Connect(EndPoint);
+            TcpConn.Connect(EndPoint);
 
-            Log.Info("start connecting {0}", EndPoint);
+            Log.Info($"Start connecting {EndPoint}. reconnectNum:{ReconnectNum}");
             StartTimer();
         }
 
@@ -70,8 +71,8 @@ namespace GameMain.Rpc
         {
             // TODO ui HideNetWaiting
 
-            Conn?.Close();
-            Conn = null;
+            TcpConn?.Close();
+            TcpConn = null;
             StopTimer();
         }
     }

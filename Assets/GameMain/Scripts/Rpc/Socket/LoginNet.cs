@@ -4,9 +4,9 @@ namespace GameMain.Rpc
 {
     public class LoginNet : ClientNetBase, INetEventHandler
     {
-        public static readonly LoginNet Instance = new();
+        public static LoginNet Instance { get; } = new();
 
-        public LoginNet()
+        private LoginNet()
         {
             m_NetEventHandler = this;
         }
@@ -21,7 +21,7 @@ namespace GameMain.Rpc
 
         public void OnConnectFailed(int reconnectNum)
         {
-            if (reconnectNum >= 3)
+            if (reconnectNum >= GameEntry.GameGlobal.ReconnectNum)
             {
                 CloseConnection();
                 // todo disconnect event

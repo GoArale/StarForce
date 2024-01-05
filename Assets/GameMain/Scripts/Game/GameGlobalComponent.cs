@@ -13,7 +13,15 @@ namespace GameMain
         /// </summary>
         [SerializeField] private bool m_EnableRpcTimeout = true;
 
+        /// <summary>
+        /// 网络重连次数
+        /// </summary>
+        [SerializeField] private int m_ReconnectNum = 3;
+        
+        
+        
         public bool EnableRpcTimeout => m_EnableRpcTimeout;
+        public int ReconnectNum => m_ReconnectNum;
 
         private void Update()
         {

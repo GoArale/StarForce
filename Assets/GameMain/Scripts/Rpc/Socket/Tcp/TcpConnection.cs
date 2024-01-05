@@ -75,7 +75,7 @@ namespace GameMain.Rpc
             }
             catch (Exception e)
             {
-                Log.Error($"begin recv failed. exception:{e}");
+                Log.Error($"Begin recv failed. exception:{e}");
                 Close();
             }
         }
@@ -89,7 +89,7 @@ namespace GameMain.Rpc
                     var bytesTransferred = args.BytesTransferred;
                     if (bytesTransferred == 0)
                     {
-                        Log.Error("recv complete failed, conn closed.");
+                        Log.Error("On recv complete failed, conn closed.");
                         Close();
                     }
                     else
@@ -111,13 +111,13 @@ namespace GameMain.Rpc
                 }
                 else
                 {
-                    Log.Error($"recv complete failed. socketError:{args.SocketError}");
+                    Log.Error($"On recv complete failed. socketError:{args.SocketError}");
                     Close();
                 }
             }
             catch (Exception e)
             {
-                Log.Error($"recv complete failed. exception:{e}");
+                Log.Error($"On recv complete failed. exception:{e}");
                 Close();
             }
         }
@@ -133,7 +133,7 @@ namespace GameMain.Rpc
             if (m_MaxSendBufLen > 0 && m_SendBufLen > m_MaxSendBufLen)
             {
                 Close(true);
-                Log.Error("send failed, over MaxSendBufLen");
+                Log.Error("Send failed, over MaxSendBufLen");
                 return false;
             }
 
@@ -151,7 +151,7 @@ namespace GameMain.Rpc
             }
             catch (Exception e)
             {
-                Log.Error($"send failed. exception:{e}");
+                Log.Error($"Send failed. exception:{e}");
                 Close();
                 return false;
             }
@@ -169,13 +169,13 @@ namespace GameMain.Rpc
                 }
                 else
                 {
-                    Log.Error($"send complete failed. socketError:{args.SocketError}");
+                    Log.Error($"On send complete failed. socketError:{args.SocketError}");
                     Close();
                 }
             }
             catch (Exception e)
             {
-                Log.Error($"send complete failed. exception:{e}");
+                Log.Error($"On send complete failed. exception:{e}");
                 Close();
             }
 
@@ -219,20 +219,21 @@ namespace GameMain.Rpc
             m_Socket = new Socket(ep.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
             var args = new SocketAsyncEventArgs();
-            args.Completed += OnConnectComplete;
+            args.Completed += ConnectCompleted;
             args.RemoteEndPoint = ep;
             RemoteEndPoint = ep;
             ConnState = ConnectionState.Connecting;
 
             if (!m_Socket.ConnectAsync(args))
             {
-                OnConnectComplete(m_Socket, args);
+                // 连接已完成，直接处理结果
+                ConnectCompleted(m_Socket, args);
             }
 
             return true;
         }
 
-        private void OnConnectComplete(object sender, SocketAsyncEventArgs args)
+        private void ConnectCompleted(object sender, SocketAsyncEventArgs args)
         {
             if (args.SocketError == SocketError.Success && m_Socket.Connected)
             {

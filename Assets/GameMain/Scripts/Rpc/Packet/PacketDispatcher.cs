@@ -32,7 +32,7 @@ namespace GameMain.Rpc
             var handler = new PacketHandler(packet);
             if (m_PacketHandlers.TryAdd(packetId, handler) == false)
             {
-                Log.Error($"register repeated packet {packet.GetLogMsg()}");
+                Log.Error($"Register repeated packet {packet.GetLogMsg()}");
             }
         }
 
@@ -65,7 +65,7 @@ namespace GameMain.Rpc
                                 fieldInfo.SetValue(null, attr.ProtocolId);
                                 RegisterPacket(attr.ProtocolId, packet);
 
-                                Log.Debug($"register packet {packet.GetLogMsg()}");
+                                Log.Debug($"Register packet {packet.GetLogMsg()}");
 
                                 success = true;
                                 break;

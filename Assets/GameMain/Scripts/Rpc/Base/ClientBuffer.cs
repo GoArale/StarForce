@@ -55,14 +55,15 @@ namespace GameMain.Rpc
             }
         }
 
-        public void ResendData(uint sequence, TcpConnection session)
+        public void ResendData(uint sequence, TcpConnection conn)
         {
             ConfirmSequence(sequence);
+            
             var header = m_Header;
             while (header != m_Tail)
             {
                 Buffer b = m_Buffer[header];
-                session.Send(b.m_Data, 0, b.m_Length);
+                conn.Send(b.m_Data, 0, b.m_Length);
                 header = (header + 1) % m_Buffer.Length;
             }
         }

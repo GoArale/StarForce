@@ -65,7 +65,7 @@ namespace GameMain.Rpc
 
         private void OnClose(TcpConnection conn, SocketError error)
         {
-            if (m_Session != null && m_Session.Conn == conn)
+            if (m_Session != null && m_Session.TcpConn == conn)
             {
                 if (m_Session.State == NetState.Connected)
                 {
@@ -82,11 +82,11 @@ namespace GameMain.Rpc
 
         private void OnConnect(TcpConnection conn)
         {
-            if (m_Session != null && m_Session.Conn == conn)
+            if (m_Session != null && m_Session.TcpConn == conn)
             {
                 // todo ui HideNetWaiting
 
-                Log.Info($"connect to {conn.RemoteEndPoint} succeed");
+                Log.Info($"Connect to {conn.RemoteEndPoint} succeed");
 
                 m_Session.State = NetState.Connected;
                 m_Session.ReconnectNum = 0;
@@ -106,9 +106,9 @@ namespace GameMain.Rpc
 
         private void OnConnectFailed(TcpConnection conn, SocketError error)
         {
-            if (m_Session != null && m_Session.Conn == conn)
+            if (m_Session != null && m_Session.TcpConn == conn)
             {
-                Log.Info($"connect to {conn.RemoteEndPoint} failed. reason:{error}");
+                Log.Error($"Connect to {conn.RemoteEndPoint} failed. reason:{error}");
                 if (m_Session.State != NetState.DisConnect)
                 {
                     m_Session.State = NetState.DisConnect;
