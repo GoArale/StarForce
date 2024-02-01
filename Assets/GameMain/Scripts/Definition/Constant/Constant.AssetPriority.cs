@@ -5,7 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace StarForce
+namespace GameMain
 {
     public static partial class Constant
     {
@@ -30,7 +30,7 @@ namespace StarForce
             public const int WeaponAsset = 30;
             public const int ArmorAsset = 30;
             public const int BulletAsset = 80;
-            public const int AsteroiAsset = 80;
+            public const int AsteroidAsset = 80;
             public const int EffectAsset = 80;
         }
     }

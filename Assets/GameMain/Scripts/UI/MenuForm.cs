@@ -5,10 +5,12 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using GameMain.Rpc;
+using KP2Protocol;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
-namespace StarForce
+namespace GameMain
 {
     public class MenuForm : UGuiForm
     {
@@ -24,12 +26,20 @@ namespace StarForce
 
         public void OnSettingButtonClick()
         {
-            GameEntry.UI.OpenUIForm(UIFormId.SettingForm);
+            // GameEntry.UI.OpenUIForm(UIFormId.SettingForm);
+            var msg = Rpc_Client2Balance_Login.New();
+            msg.m_Req.Platform = Platform.Android;
+            msg.m_Req.Channel = LoginChannel.Dev;
+            msg.m_Req.Account = "GoArale";
+            LoginNet.Instance.SendPacket(msg);
         }
 
         public void OnAboutButtonClick()
         {
-            GameEntry.UI.OpenUIForm(UIFormId.AboutForm);
+            // GameEntry.UI.OpenUIForm(UIFormId.AboutForm);
+            LoginNet.Instance.CloseConnection();
+            LoginNet.Instance.Connect(GameEntry.GameGlobal.ServerIP, GameEntry.GameGlobal.TcpPort,
+                GameEntry.GameGlobal.KcpPort);
         }
 
         public void OnQuitButtonClick()

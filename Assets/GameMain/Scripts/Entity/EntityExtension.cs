@@ -9,7 +9,7 @@ using GameFramework.DataTable;
 using System;
 using UnityGameFramework.Runtime;
 
-namespace StarForce
+namespace GameMain
 {
     public static class EntityExtension
     {
@@ -65,14 +65,14 @@ namespace StarForce
             entityComponent.ShowEntity(typeof(Armor), "Armor", Constant.AssetPriority.ArmorAsset, data);
         }
 
-        public static void ShowBullet(this EntityComponent entityCompoennt, BulletData data)
+        public static void ShowBullet(this EntityComponent entityComponent, BulletData data)
         {
-            entityCompoennt.ShowEntity(typeof(Bullet), "Bullet", Constant.AssetPriority.BulletAsset, data);
+            entityComponent.ShowEntity(typeof(Bullet), "Bullet", Constant.AssetPriority.BulletAsset, data);
         }
 
-        public static void ShowAsteroid(this EntityComponent entityCompoennt, AsteroidData data)
+        public static void ShowAsteroid(this EntityComponent entityComponent, AsteroidData data)
         {
-            entityCompoennt.ShowEntity(typeof(Asteroid), "Asteroid", Constant.AssetPriority.AsteroiAsset, data);
+            entityComponent.ShowEntity(typeof(Asteroid), "Asteroid", Constant.AssetPriority.AsteroidAsset, data);
         }
 
         public static void ShowEffect(this EntityComponent entityComponent, EffectData data)

@@ -10,7 +10,7 @@ using System;
 using UnityGameFramework.Runtime;
 using ProcedureOwner = GameFramework.Fsm.IFsm<GameFramework.Procedure.IProcedureManager>;
 
-namespace StarForce
+namespace GameMain
 {
     public class ProcedureLaunch : ProcedureBase
     {
@@ -59,7 +59,9 @@ namespace StarForce
                 return;
             }
 
+            // 系统语言
             Language language = GameEntry.Localization.Language;
+            // 游戏内玩家设置语言
             if (GameEntry.Setting.HasSetting(Constant.Setting.Language))
             {
                 try
@@ -67,8 +69,9 @@ namespace StarForce
                     string languageString = GameEntry.Setting.GetString(Constant.Setting.Language);
                     language = (Language)Enum.Parse(typeof(Language), languageString);
                 }
-                catch
+                catch (Exception e)
                 {
+                    Log.Error($"Parse setting language failure. {e}");
                 }
             }
 

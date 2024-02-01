@@ -104,6 +104,37 @@ namespace GameFramework
 
                 return null;
             }
+
+            /// <summary>
+            /// 获取已加载的程序集中的所有指定的类型集合。
+            /// </summary>
+            /// <param name="targetType">目标类型。</param>
+            public static IEnumerable<Type> GetTargetTypes(Type targetType)
+            {
+                foreach (System.Reflection.Assembly assembly in s_Assemblies)
+                {
+                    foreach (Type type in assembly.GetTypes())
+                    {
+                        if (targetType.IsInterface)
+                        {
+                            foreach (Type iType in type.GetInterfaces())
+                            {
+                                if (iType == targetType)
+                                {
+                                    yield return type;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (type.IsSubclassOf(targetType))
+                            {
+                                yield return type;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
