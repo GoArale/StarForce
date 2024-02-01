@@ -14,7 +14,6 @@ namespace GameMain.Rpc
         public abstract PacketBase Create();
         public abstract bool Decode(byte[] data, int offset, int length);
         public abstract bool Encode(MemoryStream st, uint confirmSequenceId);
-        protected abstract void Process();
         public abstract void OnReceive();
         public abstract void OnSend();
         public abstract string GetLogMsg();
@@ -22,6 +21,10 @@ namespace GameMain.Rpc
 
     public abstract class PtcBase : PacketBase
     {
+        /// <summary>
+        /// Ptc 请求处理逻辑
+        /// </summary>
+        protected abstract void Process();
     }
 
     public abstract class RpcBase : PacketBase
@@ -31,6 +34,11 @@ namespace GameMain.Rpc
 
         public ClientNetBase NetModule { get; set; }
         protected abstract int Timeout { get; }
+
+        /// <summary>
+        /// Rpc 请求应答处理逻辑
+        /// </summary>
+        protected abstract void OnReply();
 
         /// <summary>
         /// 已发送

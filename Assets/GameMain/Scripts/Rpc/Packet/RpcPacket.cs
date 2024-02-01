@@ -102,7 +102,7 @@ namespace GameMain.Rpc
                 // todo ErrorCode.Success
                 if (m_ErrorCode == 0)
                 {
-                    Process();
+                    OnReply();
                     // todo event
                 }
                 else
@@ -116,9 +116,9 @@ namespace GameMain.Rpc
             }
         }
 
-        protected override void Process()
+        protected override void OnReply()
         {
-            throw new NotImplementedException($"Rpc:{GetType()} not implemented Process");
+            throw new NotImplementedException($"Rpc:{GetType()} not implemented OnRelay");
         }
 
         public override void OnSend()

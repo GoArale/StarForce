@@ -6,6 +6,7 @@
 //------------------------------------------------------------
 
 using GameMain.Rpc;
+using KP2Protocol;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
@@ -26,8 +27,10 @@ namespace GameMain
         public void OnSettingButtonClick()
         {
             // GameEntry.UI.OpenUIForm(UIFormId.SettingForm);
-            var msg = Rpc_Client2Balance_LoginTest.New();
-            msg.m_Req.Platform = KP2Protocol.Platform.Android;
+            var msg = Rpc_Client2Balance_Login.New();
+            msg.m_Req.Platform = Platform.Android;
+            msg.m_Req.Channel = LoginChannel.Dev;
+            msg.m_Req.Account = "GoArale";
             LoginNet.Instance.SendPacket(msg);
         }
 
@@ -35,7 +38,8 @@ namespace GameMain
         {
             // GameEntry.UI.OpenUIForm(UIFormId.AboutForm);
             LoginNet.Instance.CloseConnection();
-            LoginNet.Instance.Connect("10.2.196.117", 9000);
+            LoginNet.Instance.Connect(GameEntry.GameGlobal.ServerIP, GameEntry.GameGlobal.TcpPort,
+                GameEntry.GameGlobal.KcpPort);
         }
 
         public void OnQuitButtonClick()

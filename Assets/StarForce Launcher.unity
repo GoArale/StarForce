@@ -833,6 +833,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_EnableRpcTimeout: 1
   m_ReconnectNum: 3
+  m_ServerIP: 10.2.196.117
+  m_TcpPort: 9000
+  m_KcpPort: -1
 --- !u!1 &1454214586
 GameObject:
   m_ObjectHideFlags: 0

@@ -86,6 +86,11 @@ namespace GameMain.Rpc
             // todo event
         }
 
+        protected override void Process()
+        {
+            throw new NotImplementedException($"Ptc:{GetType()} not implemented Process");
+        }
+
         public override void OnSend()
         {
         }

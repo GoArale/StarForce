@@ -17,11 +17,28 @@ namespace GameMain
         /// 网络重连次数
         /// </summary>
         [SerializeField] private int m_ReconnectNum = 3;
-        
-        
-        
+
+        /// <summary>
+        /// Server IP Address
+        /// </summary>
+        [SerializeField] private string m_ServerIP = ""; // 10.2.196.117
+
+        /// <summary>
+        /// tcp port
+        /// </summary>
+        [SerializeField] private int m_TcpPort = -1; // 9000
+
+        /// <summary>
+        /// kcp port
+        /// </summary>
+        [SerializeField] private int m_KcpPort = -1;
+
+
         public bool EnableRpcTimeout => m_EnableRpcTimeout;
         public int ReconnectNum => m_ReconnectNum;
+        public string ServerIP => m_ServerIP;
+        public int TcpPort => m_TcpPort;
+        public int KcpPort => m_KcpPort;
 
         private void Update()
         {

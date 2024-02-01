@@ -59,7 +59,9 @@ namespace GameMain
                 return;
             }
 
+            // 系统语言
             Language language = GameEntry.Localization.Language;
+            // 游戏内玩家设置语言
             if (GameEntry.Setting.HasSetting(Constant.Setting.Language))
             {
                 try
@@ -67,8 +69,9 @@ namespace GameMain
                     string languageString = GameEntry.Setting.GetString(Constant.Setting.Language);
                     language = (Language)Enum.Parse(typeof(Language), languageString);
                 }
-                catch
+                catch (Exception e)
                 {
+                    Log.Error($"Parse setting language failure. {e}");
                 }
             }
 
