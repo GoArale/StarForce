@@ -38,14 +38,14 @@ namespace GameMain.Rpc
             }
 
             // kcp
-            if (kcpPort > 0)
-            {
-                // todo random kcp listen port
-                m_Session.KcpListenPort = 5001;
-                m_Session.KcpEndPoint = new IPEndPoint(IPAddress.Parse(ip), kcpPort);
-                // todo KcpHandler
-                m_Session.KcpConnect();
-            }
+            // if (kcpPort > 0)
+            // {
+            //     // todo random kcp listen port
+            //     m_Session.KcpListenPort = 5001;
+            //     m_Session.KcpEndPoint = new IPEndPoint(IPAddress.Parse(ip), kcpPort);
+            //     // todo KcpHandler
+            //     m_Session.KcpConnect();
+            // }
         }
 
         public bool SendPacket(RpcBase packet, bool cache = true)

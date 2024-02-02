@@ -10,8 +10,9 @@ namespace GameMain.Rpc
         public IPEndPoint TcpEndPoint { get; set; }
         public IPEndPoint KcpEndPoint { get; set; }
         public TcpConnection TcpConn { get; private set; }
-        public KcpConnection KcpConn { get; private set; }
-        public int KcpListenPort { get; set; }
+
+        // public KcpConnection KcpConn { get; private set; }
+        // public int KcpListenPort { get; set; }
         public NetState State { get; set; }
         public int Timeout { get; set; }
         public int ReconnectNum { get; set; }
@@ -21,12 +22,12 @@ namespace GameMain.Rpc
         private readonly INetEventHandler m_NetEventHandler;
         private TimerTask m_TcpTimer;
 
-        private TimerTask m_KcpTimer;
+        // private TimerTask m_KcpTimer;
 
         /// <summary>
         /// 网络是否稳定
         /// </summary>
-        private bool m_NetStability = true;
+        // private bool m_NetStability = true;
 
         public Session(INetEventHandler netEventHandler)
         {
@@ -78,36 +79,36 @@ namespace GameMain.Rpc
             StartTimer();
         }
 
-        // todo kcp connect
-        public void KcpConnect()
-        {
-            // 关闭旧连接
-            KcpConn?.Close();
-            // 建立 kcp 新连接
-            KcpConn = new KcpConnection();
-            // KcpConn.Init();
-            KcpConn.Connect(KcpListenPort, KcpEndPoint);
+        // // todo kcp connect
+        // public void KcpConnect()
+        // {
+        // // 关闭旧连接
+        // KcpConn?.Close();
+        // // 建立 kcp 新连接
+        // KcpConn = new KcpConnection();
+        // // KcpConn.Init();
+        // KcpConn.Connect(KcpListenPort, KcpEndPoint);
+        //
+        // Log.Info($"Start connecting {KcpEndPoint}");
+        // StartKcpTimer();
+        // }
 
-            Log.Info($"Start connecting {KcpEndPoint}");
-            StartKcpTimer();
-        }
+        // private void StartKcpTimer()
+        // {
+        //     StopKcpTimer();
+        //     m_KcpTimer = TimerManager.Instance.AddTimer(10, OnUpdateKcp, -1);
+        // }
 
-        private void StartKcpTimer()
-        {
-            StopKcpTimer();
-            m_KcpTimer = TimerManager.Instance.AddTimer(10, OnUpdateKcp, -1);
-        }
+        // private void OnUpdateKcp()
+        // {
+        //     KcpConn.Kcp.Update(DateTimeOffset.UtcNow);
+        // }
 
-        private void OnUpdateKcp()
-        {
-            KcpConn.Kcp.Update(DateTimeOffset.UtcNow);
-        }
-
-        private void StopKcpTimer()
-        {
-            m_KcpTimer?.Cancel();
-            m_KcpTimer = null;
-        }
+        // private void StopKcpTimer()
+        // {
+        //     m_KcpTimer?.Cancel();
+        //     m_KcpTimer = null;
+        // }
 
         public void Close()
         {
