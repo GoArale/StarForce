@@ -16,6 +16,7 @@
 *.userprefs
 *.pidb
 *.svd
+*.idea
 
 /Assets/StreamingAssets/*
 !/Assets/StreamingAssets/.gitkeep
@@ -23,6 +24,5 @@
 /Packages/*
 /UnityPackageManager/*
 /Logs/*
-/.idea/*
 /UserSettings/*
-/Assets/.idea/*
+

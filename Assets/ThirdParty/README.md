@@ -20,6 +20,11 @@
    And Unity will redirect project compilation to use this instead.
    The same can be done if another .NET DLL dependency is requested, like "System.Buffers.dll" or "System.Memory.dll"
    ```
+### RecyclableMemoryStream
+* 引入 Microsoft.IO
+
+### TextMesh Pro
+* TextMesh Pro UI 组件
 
 ### 协议生成工具接入使用说明
 1. 

@@ -1,10 +1,10 @@
 {
   "GameVersion": "0.1.0",
   "InternalGameVersion": 0,
-  "CheckVersionUrl": "https://starforce.gameframework.cn/Resources/{0}Version.txt",
-  "WindowsAppUrl": "https://starforce.gameframework.cn",
-  "MacOSAppUrl": "https://starforce.gameframework.cn",
-  "IOSAppUrl": "https://starforce.gameframework.cn",
-  "AndroidAppUrl": "https://starforce.gameframework.cn",
+  "CheckVersionUrl": "http://10.2.196.117/Resources/{0}Version.txt",
+  "WindowsAppUrl": "http://10.2.196.117",
+  "MacOSAppUrl": "http://10.2.196.117",
+  "IOSAppUrl": "http://10.2.196.117",
+  "AndroidAppUrl": "http://10.2.196.117",
   "END_OF_JSON": ""
 }

@@ -19,33 +19,20 @@ namespace GameMain.Rpc
         private uint m_LastRecvSequenceId;
         private uint m_LastSendSequenceId;
 
-        public void Connect(string ip, int tcpPort, int kcpPort = -1, int timeoutMs = 3000)
+        public void Connect(string ip, int port, int timeoutMs = 3000)
         {
             if (m_Session == null)
             {
                 m_Session = new Session(m_NetEventHandler);
             }
-
-            // tcp
-            if (tcpPort > 0)
-            {
-                m_Session.TcpEndPoint = new IPEndPoint(IPAddress.Parse(ip), tcpPort);
-                m_Session.Timeout = timeoutMs;
-                m_Session.TcpHandler = this;
-                m_Session.TcpConnect();
-                m_Session.ReconnectNum = 0;
-                m_Session.ConnectedNum = 0;
-            }
-
-            // kcp
-            if (kcpPort > 0)
-            {
-                // todo random kcp listen port
-                m_Session.KcpListenPort = 5001;
-                m_Session.KcpEndPoint = new IPEndPoint(IPAddress.Parse(ip), kcpPort);
-                // todo KcpHandler
-                m_Session.KcpConnect();
-            }
+           
+            m_Session.EndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
+            m_Session.Timeout = timeoutMs;
+            m_Session.TcpHandler = this;
+            
+            m_Session.Connect();
+            m_Session.ReconnectNum = 0;
+            m_Session.ConnectedNum = 0;
         }
 
         public bool SendPacket(RpcBase packet, bool cache = true)

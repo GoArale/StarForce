@@ -37,9 +37,9 @@ namespace GameMain
         public void OnAboutButtonClick()
         {
             // GameEntry.UI.OpenUIForm(UIFormId.AboutForm);
-            LoginNet.Instance.CloseConnection();
-            LoginNet.Instance.Connect(GameEntry.GameGlobal.ServerIP, GameEntry.GameGlobal.TcpPort,
-                GameEntry.GameGlobal.KcpPort);
+            // LoginNet.Instance.CloseConnection();
+            // LoginNet.Instance.Connect(GameEntry.GameGlobal.ServerIP, GameEntry.GameGlobal.TcpPort,
+            //     GameEntry.GameGlobal.KcpPort);
         }
 
         public void OnQuitButtonClick()
